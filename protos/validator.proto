@@ -205,6 +205,20 @@ message Message {
         CONSENSUS_NOTIFY_ENGINE_DEACTIVATED = 908;
 
         CONSENSUS_NOTIFY_ACK = 999;
+
+        // Consensus messages specific to the Giskard consensus
+        // PrepareBlock: Block Proposer sends prepare messages
+        //      to all participating validators (also itself, as it also acts as a validator)
+        // PrepareVote: does a validator have a vote quorum, or a PrepareQC of the parent block in memory,
+        //      or the PrepareBlock msg already contains a PrepareQC is this sent to all validators
+        // View_Change: only sent in the case of an abnormal view change
+        // PrepareQC: prepare quorum of a block
+        // ViewChangeQC: view change quorum reached
+        CONSENSUS_PREPARE_BLOCK = 1000
+        CONSENSUS_PREPARE_VOTE = 1001
+        CONSENSUS_VIEW_CHANGE = 1002
+        CONSENSUS_PREPARE_QC = 1003
+        CONSENSUS_VIEW_CHANGE_QC = 1004
     }
     // The type of message, used to determine how to 'route' the message
     // to the appropriate handler as well as how to deserialize the

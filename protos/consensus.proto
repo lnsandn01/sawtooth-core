@@ -544,3 +544,65 @@ message ConsensusStateGetResponse {
   Status status = 1;
   repeated ConsensusStateEntry entries = 2;
 }
+
+// Broadcast a consensus message to all peers
+message ConsensusBroadcastRequest {
+  // Payload to broadcast peers
+  //
+  // NOTE: This payload will be wrapped up in a ConsensusPeerMessage struct,
+  // which includes computing its SHA-512 digest, inserting this engine's
+  // registration info, and the validator's public key, and signing everything
+  // with the validator's private key.
+  bytes content = 1;
+  string message_type = 2;
+}
+
+// Consensus messages specific to the Giskard consensus
+
+// PrepareBlock: Block Proposer sends prepare messages
+// to all participating validators (also itself, as it also acts as a validator)
+message ConsensusPrepareBlock{
+    string message_type = 1;
+    ushort view_number = 2;
+    ConsensusPeerInfo sender = 3;
+    ConsensusBlock block = 4;
+    ConsensusBlock piggyback_block = 5;
+}
+
+message ConsensusPrepareVote{
+    // PrepareVote: does a validator have a vote quorum, or a PrepareQC of the parent block in memory,
+    // or the PrepareBlock msg already contains a PrepareQC is this sent to all validators
+    string message_type = 1;
+    ushort view_number = 2;
+    ConsensusPeerInfo sender = 3;
+    ConsensusBlock block = 4;
+    ConsensusBlock piggyback_block = 5;
+}
+
+message ConsensusViewChange{
+    // View_Change: only sent in the case of an abnormal view change
+    string message_type = 1;
+    ushort view_number = 2;
+    ConsensusPeerInfo sender = 3;
+    ConsensusBlock block = 4;
+    ConsensusBlock piggyback_block = 5;
+}
+
+message ConsensusPrepareQC{
+    // PrepareQC: prepare quorum of a block
+    string message_type = 1;
+    ushort view_number = 2;
+    ConsensusPeerInfo sender = 3;
+    ConsensusBlock block = 4;
+    ConsensusBlock piggyback_block = 5;
+}
+
+message ConsensusViewChangeQC{
+    // ViewChangeQC: view change quorum reached
+    string message_type = 1;
+    ushort view_number = 2;
+    ConsensusPeerInfo sender = 3;
+    ConsensusBlock block = 4;
+    ConsensusBlock piggyback_block = 5;
+}
+
